@@ -9,7 +9,8 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha ./test",
-    "generate-docs": "jsdoc -c .jsdocrc --verbose"
+    "generate-docs": "jsdoc -c .jsdocrc --verbose",
+    "jscheck": "jshint index.js && jscs index.js"
   },
   "license": "ISC",
   "dependencies": {
