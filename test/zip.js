@@ -9,7 +9,7 @@ describe('fs.zip()', function () {
 
     before(function () {
         fs.error(null);
-        assert.equal(fs.error(), null);
+        assert.equal();
     });
 
     it('should create zip archive', function () {
