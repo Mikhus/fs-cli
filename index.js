@@ -324,7 +324,7 @@ function readfile (path, options) {
     path = realpath(path);
 
     try {
-        return fs.readFileSync(path, options);
+        return fs.readFileSync(path, options).toString();
     }
 
     catch (err) {
