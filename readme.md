@@ -17,7 +17,7 @@ is required to make a script which look-ups for all available ```.doc``` files
 in some given directory recursively, move them to a given destination, creates 
 tarball from it and does a clean-up.
 
-```lavascript
+```javascript
 var fs = require('fs-cli');
 var temp = './doc';
 fs.mv('/home/user/docs/**/*.doc', temp);
@@ -30,7 +30,7 @@ Oh, really? - Yeah!
 Of course, it's not very error-prone to write like that. You may want to add 
 some checks:
 
-```lavascript
+```javascript
 var fs = require('fs-cli');
 var temp = './doc';
 function die() {
@@ -45,7 +45,7 @@ fs.rm(temp) || die();
 Want to remove all ```.svn``` folders with its contents from a certain folder?
 Here it is:
 
-```lavascript
+```javascript
 var fs = require('fs-cli');
 fs.rm('./my-project/**/.svn');
 ```
