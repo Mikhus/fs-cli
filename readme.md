@@ -67,7 +67,7 @@ Do you like that, want to help? Welcome!
 
 ## What Does It Can
 
- - **ls/lsl/lsal/lsls/lsals/list**: directory listing
+ - **ls/lsa/lsl/lsal/lsls/lsals/list**: directory listing
  - **rm**: remove given path with all its contents, globs are allowed
  - **mv**: move source to destination, create missing paths recursive, +globs
  - **cp**: copy recursive, globs are allowed
