@@ -698,12 +698,26 @@ function ls (path) {
 }
 
 /**
+ * Same as #ls(), but with '.' and '..' items
+ *
+ * @param {string} path
+ * @returns {Array}
+ * @access public
+ * @static
+ */
+function lsa (path) {
+    return ['.', '..'].concat(ls(path));
+}
+
+/**
  * Alias for #list(). Treat it as `ls -l` on Unix-like platforms.
  * Stat will be provided as lstat, equal to list(path, 'lstat'). For
  * stat version use #lsls()
  *
- * @param path
+ * @param {string} path
  * @returns {Object|null}
+ * @access public
+ * @static
  */
 function lsl (path) {
     return list(path, 'lstat');
@@ -714,8 +728,10 @@ function lsl (path) {
  * Stat vill be provided as lstat, equal to list(path, 'lstat', true). For
  * stat version use #lsals()
  *
- * @param path
+ * @param {string} path
  * @returns {Object|null}
+ * @access public
+ * @static
  */
 function lsal (path) {
     return list(path, 'lstat', true);
@@ -724,8 +740,10 @@ function lsal (path) {
 /**
  * Same as #lsl(), but uses stat, instead of lstat.
  *
- * @param path
+ * @param {string} path
  * @returns {Object|null}
+ * @access public
+ * @static
  */
 function lsls (path) {
     return list(path, 'stat');
@@ -734,8 +752,10 @@ function lsls (path) {
 /**
  * Same as lsal, but uses stat instead of lstat.
  *
- * @param path
+ * @param {string} path
  * @returns {Object|null}
+ * @access public
+ * @static
  */
 function lsals (path) {
     return list(path, 'stat', true);
@@ -1195,6 +1215,7 @@ module.exports = {
     rm: rm,
     list: list,
     ls: ls,
+    lsa: lsa,
     lsl: lsl,
     lsal: lsal,
     lsls: lsls,
