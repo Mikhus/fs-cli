@@ -463,7 +463,15 @@ function cp (src, dst, overwrite) {
     }
 
     // directory - copy recursively
-    if (!dstExists && !mkdir(dst)) {
+    if (dstExists) {
+        dst = dst + SEP + name;
+
+        if (!mkdir(dst)) {
+            return false;
+        }
+    }
+
+    else if (!mkdir(dst)) {
         return false;
     }
 
@@ -473,7 +481,7 @@ function cp (src, dst, overwrite) {
 
     // recursive copy
     for (entry in entries) {
-        if (!cp(src + SEP + entry, dst + SEP + entry, overwrite)) {
+        if (!cp(src + SEP + entry, dst, overwrite)) {
             return false;
         }
     }
