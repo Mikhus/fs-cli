@@ -4,10 +4,13 @@ var root = './test';
 var uncovered = [];
 var covered = [];
 var file, files;
+var exclude = ['glob'];
 
 Object.keys(fs).forEach(function (method) {
     if (typeof fs[method] === 'function' && !fs.exists(root + '/' + method)) {
-        fs.touch(root + '/' + method + '.js');
+        if (!~exclude.indexOf(method)) {
+            fs.touch(root + '/' + method + '.js');
+        }
     }
 });
 
