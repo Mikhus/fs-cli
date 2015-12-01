@@ -162,7 +162,7 @@ function rchmod (path, mode) {
         return res;
     }
 
-    if (!(entries = ls(path))) {
+    if (!(entries = list(path))) {
         return false;
     }
 
@@ -228,7 +228,7 @@ function rchown (path, uid, gid) {
         return res;
     }
 
-    if (!(entries = ls(path))) {
+    if (!(entries = list(path))) {
         return false;
     }
 
@@ -467,7 +467,7 @@ function cp (src, dst, overwrite) {
         return false;
     }
 
-    if (!(entries = ls(src))) {
+    if (!(entries = list(src))) {
         return false;
     }
 
@@ -580,7 +580,7 @@ function rm (path) {
         return true;
     }
 
-    entries = ls(path);
+    entries = list(path);
 
     if (!entries) {
         return false;
@@ -617,7 +617,7 @@ function rm (path) {
  * just names, but in most cases it is much useful. Stats are obtained with
  * the given method.
  * "stat" method will follow symlinks to stat their targets, "lstat" method will
- * stat symlinks themselves, "none" (by default) - will not do stat.
+ * stat symlinks themselves, "none" (by default) - won't stat anything.
  *
  * <pre>
  * <caption>Possible methods:</caption>
@@ -631,7 +631,7 @@ function rm (path) {
  *
  * @example
  * var fs = require('fs-cli');
- * var entries = fs.ls('.', 'lstat');
+ * var entries = fs.list('.', 'lstat');
  * if (!entries) {
  *  console.log(fs.error());
  *  process.exit();
@@ -646,9 +646,10 @@ function rm (path) {
  *
  * @param {string} path - path to directory to be listed
  * @param {string} [method] - stat method ('stat'|'lstat'|'none',default:'none')
+ * @param {boolean} [all] - if true, will not omit listing of '.' and '..' dirs
  * @returns {Object|null}
  */
-function ls (path, method) {
+function list (path, method, all) {
     'use strict';
 
     path = realpath(path);
@@ -657,16 +658,23 @@ function ls (path, method) {
         method = 'none';
     }
 
+    var mstat = function (itemPath) {
+        return method != 'none' && fs[method + 'Sync'] ?
+            fs[method + 'Sync'](itemPath) :
+            {};
+    };
+
     try {
         var items = {};
 
         fs.readdirSync(path).forEach(function (item) {
-            items[item] = (
-                method != 'none' && fs[method + 'Sync'] ?
-                    fs[method + 'Sync'](path + SEP + item) :
-                    {}
-            );
+            items[item] = mstat(path + SEP + item);
         });
+
+        if (all) {
+            items['.'] = mstat(path + SEP + '.');
+            items['..'] = mstat(path + SEP + '..');
+        }
 
         return items;
     }
@@ -675,6 +683,62 @@ function ls (path, method) {
         lastError = err;
         return null;
     }
+}
+
+/**
+ * Alias for list, but will return items as array
+ *
+ * @param {string} path
+ * @returns {Array}
+ * @access public
+ * @static
+ */
+function ls (path) {
+    return Object.keys(list(path));
+}
+
+/**
+ * Alias for #list(). Treat it as `ls -l` on Unix-like platforms.
+ * Stat will be provided as lstat, equal to list(path, 'lstat'). For
+ * stat version use #lsls()
+ *
+ * @param path
+ * @returns {Object|null}
+ */
+function lsl (path) {
+    return list(path, 'lstat');
+}
+
+/**
+ * Alias for #list(). Treat it as `ls -al` on Unix-like platforms.
+ * Stat vill be provided as lstat, equal to list(path, 'lstat', true). For
+ * stat version use #lsals()
+ *
+ * @param path
+ * @returns {Object|null}
+ */
+function lsal (path) {
+    return list(path, 'lstat', true);
+}
+
+/**
+ * Same as #lsl(), but uses stat, instead of lstat.
+ *
+ * @param path
+ * @returns {Object|null}
+ */
+function lsls (path) {
+    return list(path, 'stat');
+}
+
+/**
+ * Same as lsal, but uses stat instead of lstat.
+ *
+ * @param path
+ * @returns {Object|null}
+ */
+function lsals (path) {
+    return list(path, 'stat', true);
 }
 
 /**
@@ -1129,7 +1193,12 @@ module.exports = {
     cp: cp,
     mv: mv,
     rm: rm,
+    list: list,
     ls: ls,
+    lsl: lsl,
+    lsal: lsal,
+    lsls: lsls,
+    lsals: lsals,
     tar: tar,
     untar: untar,
     zip: zip,
