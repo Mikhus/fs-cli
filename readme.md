@@ -17,37 +17,38 @@ is required to make a script which look-ups for all available ```.doc``` files
 in some given directory recursively, move them to a given destination, creates 
 tarball from it and does a clean-up.
 
-    var fs = require('fs-cli');
-    
-    var temp = './doc';
-    
-    fs.mv('/home/user/docs/**/*.doc', temp);
-    fs.tar(temp, './all-docs.tgz');
-    fs.rm(temp);
+```lavascript
+var fs = require('fs-cli');
+var temp = './doc';
+fs.mv('/home/user/docs/**/*.doc', temp);
+fs.tar(temp, './all-docs.tgz');
+fs.rm(temp);
+```
 
 Oh, really? - Yeah!
 
 Of course, it's not very error-prone to write like that. You may want to add 
 some checks:
 
-    var fs = require('fs-cli');
-    
-    var temp = './doc';
-    
-    function die() {
-        console.log(fs.error().stack);
-        process.exit();
-    }
-    
-    fs.mv('/home/user/docs/**/*.doc', temp) || die();
-    fs.tar(temp, './all-docs.tgz') || die();
-    fs.rm(temp) || die();
-    
+```lavascript
+var fs = require('fs-cli');
+var temp = './doc';
+function die() {
+    console.log(fs.error().stack);
+    process.exit();
+}
+fs.mv('/home/user/docs/**/*.doc', temp) || die();
+fs.tar(temp, './all-docs.tgz') || die();
+fs.rm(temp) || die();
+```
+
 Want to remove all ```.svn``` folders with its contents from a certain folder?
 Here it is:
 
-    var fs = require('fs-cli');
-    fs.rm('./my-project/**/.svn');
+```lavascript
+var fs = require('fs-cli');
+fs.rm('./my-project/**/.svn');
+```
 
 -- Simple? Short? Cross-platform? Synchronous? Recursive? FS? JavaScript?<br>
 -- Yeah! That's why!<br>
