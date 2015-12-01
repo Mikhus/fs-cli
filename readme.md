@@ -42,6 +42,12 @@ some checks:
     fs.mv('/home/user/docs/**/*.doc', temp) || die();
     fs.tar(temp, './all-docs.tgz') || die();
     fs.rm(temp) || die();
+    
+Want to remove all ```.svn``` folders with its contents from a certain folder?
+Here it is:
+
+    var fs = require('fs-cli');
+    fs.rm('./my-project/**/.svn');
 
 -- Simple? Short? Cross-platform? Synchronous? Recursive? FS? JavaScript?<br>
 -- Yeah! That's why!<br>

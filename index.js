@@ -563,9 +563,8 @@ function rm (path) {
     var stat = exists(path);
 
     if (!stat) {
-        lastError = new Error('Remove error: source path "' + path + '" ' +
-            'does not exist!');
-        return false;
+        // someone did our job already? well done!
+        return true;
     }
 
     if (!stat.isDirectory()) {
@@ -1127,9 +1126,9 @@ function globalize (fn, argIndex) {
 
 // export all that to whom it may need, we are not hoggish
 module.exports = {
-    cp: globalize(cp),
-    mv: globalize(mv),
-    rm: globalize(rm),
+    cp: cp,
+    mv: mv,
+    rm: rm,
     ls: ls,
     tar: tar,
     untar: untar,
@@ -1140,10 +1139,10 @@ module.exports = {
     mkdir: mkdir,
     open: open,
     close: close,
-    chown: globalize(chown),
-    rchown: globalize(rchown),
-    chmod: globalize(chmod),
-    rchmod: globalize(rchmod),
+    chown: chown,
+    rchown: rchown,
+    chmod: chmod,
+    rchmod: rchmod,
     read: read,
     write: write,
     readfile: readfile,
@@ -1151,6 +1150,12 @@ module.exports = {
     exists: exists,
     error: error,
     relpath: relpath,
+    glob: glob.sync,
     DIRSEP: SEP,
     DIRSEP_REGEX: SEP_RX
 };
+
+['cp', 'mv', 'rm', 'chown', 'rchown', 'chmod', 'rchmod'].
+forEach(function (name) {
+    module.exports[name] = globalize(module.exports[name]);
+});
