@@ -510,22 +510,22 @@ function mv (src, dst) {
     src = realpath(src);
     dst = realpath(dst);
 
-    var stat = exists(src);
-    var dname = p.basename(dst);
+    var existingSrc = exists(src);
+    var existingDst = exists(dst);
 
-    dst = p.dirname(dst);
-
-    if (!stat) {
+    if (!existingSrc) {
         lastError = new Error('Move error: source path "' + src + '" ' +
             'does not exist!');
         return false;
     }
 
-    if (stat.isDirectory() && !exists(dst) && !mkdir(dst)) {
-        return false;
+    if (existingDst && existingDst.isDirectory()) {
+        dst += SEP + p.basename(src);
     }
 
-    dst += SEP + dname;
+    else if (!mkdir(p.dirname(dst))) {
+        return false;
+    }
 
     try {
         fs.renameSync(src, dst);
