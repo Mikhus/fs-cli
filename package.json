@@ -1,0 +1,25 @@
+{
+  "name": "fs.cli",
+  "version": "0.0.1",
+  "description": "Easy filesystem functions",
+  "main": "index.js",
+  "author": {
+    "name": "mikhus",
+    "email": "mikhus@gmail.com"
+  },
+  "scripts": {
+    "test": "mocha",
+    "generate-docs": "jsdoc -c .jsdocrc --verbose"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "adm-zip": "^0.4.7",
+    "deasync": "^0.1.4",
+    "glob": "^6.0.1",
+    "tar.gz": "^1.0.2"
+  },
+  "devDependencies": {
+    "loke-jsdoc-theme": "^2.1.0"
+  }
+}
