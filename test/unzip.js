@@ -1,7 +1,5 @@
 var assert = require('assert');
 var fs = require('../index');
-var tgz = require('tar.gz');
-var p = require('path');
 
 describe('fs.unzip()', function () {
     before(function () {

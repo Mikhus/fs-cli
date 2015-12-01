@@ -1,7 +1,5 @@
 var assert = require('assert');
 var fs = require('../index');
-var tgz = require('tar.gz');
-var p = require('path');
 
 describe('fs.untar()', function () {
     before(function () {
@@ -28,6 +26,6 @@ describe('fs.untar()', function () {
     });*/
 
     after(function() {
-        assert.equal(fs.rm('./tmp'), true);
+        fs.rm('./tmp');
     });
 });
