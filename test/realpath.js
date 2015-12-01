@@ -11,7 +11,12 @@ function nodots (path) {
 }
 
 describe('fs.realpath()', function () {
-    it('shoud return a path string', function () {
+    before(function() {
+        fs.error(null);
+        assert.equal(fs.error(), null);
+    });
+
+    it('should return a path string', function () {
         assert.equal(
             typeof fs.realpath('./test/some/path/depth') === 'string',
             true
