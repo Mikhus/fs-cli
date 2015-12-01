@@ -1,6 +1,6 @@
 # Easy FS Scripting With NodeJS
 
-[![Build Status](https://travis-ci.org/Mikhus/fs-cli.svg?branch=master)](https://travis-ci.org/Mikhus/fs-cli)
+[![Build Status](https://travis-ci.org/Mikhus/fs-cli.svg?branch=master)](https://travis-ci.org/Mikhus/fs-cli) [![Dependency Status](https://david-dm.org/Mikhus/fs-cli.svg)](https://david-dm.org/Mikhus/fs-cli) [![devDependency Status](https://david-dm.org/Mikhus/fs-cli.svg)](https://david-dm.org/Mikhus/fs-cli#info=devDependencies) 
 
 It is specially created to get rid of routines when writing CLI tools using
 NodeJS. File system. Recursive. Synchronous...
