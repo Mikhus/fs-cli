@@ -2,6 +2,11 @@ var assert = require('assert');
 var fs = require('../index');
 
 describe('fs.mkdir()', function () {
+    before(function () {
+        fs.error(null);
+        assert.equal(fs.error(), null);
+    });
+
     it('should create given path recursively', function () {
         assert.equal(fs.mkdir('./test/some/path/depth'), true);
     });
@@ -16,6 +21,6 @@ describe('fs.mkdir()', function () {
     });
 
     after(function() {
-        fs.rm('./test/some');
+        assert.equal(fs.rm('./test/some'), true);
     });
 });

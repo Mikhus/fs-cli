@@ -9,6 +9,7 @@ describe('fs.tar()', function () {
 
     before(function () {
         fs.error(null);
+        assert.equal(fs.error(), null);
     });
 
     it('should create zip archive', function () {
@@ -45,6 +46,6 @@ describe('fs.tar()', function () {
     });
 
     after(function() {
-        fs.rm('./tmp');
+        assert.equal(fs.rm('./tmp'), true);
     });
 });

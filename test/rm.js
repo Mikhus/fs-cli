@@ -32,6 +32,6 @@ describe('fs.rm()', function () {
     });
 
     after(function() {
-        fs.rm('./tmp');
+        assert.equal(fs.rm('./tmp'), true);
     });
 });
