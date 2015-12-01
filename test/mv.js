@@ -32,6 +32,6 @@ describe('fs.mv()', function () {
     });
 
     after(function() {
-        //fs.rm('./tmp');
+        fs.rm('./tmp');
     });
 });
