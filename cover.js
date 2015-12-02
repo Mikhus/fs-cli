@@ -4,7 +4,7 @@ var root = './test';
 var uncovered = [];
 var covered = [];
 var file, files;
-var exclude = ['glob'];
+var exclude = ['glob', 'basename', 'dirname'];
 
 Object.keys(fs).forEach(function (method) {
     if (typeof fs[method] === 'function' && !fs.exists(root + '/' + method)) {
@@ -17,7 +17,7 @@ Object.keys(fs).forEach(function (method) {
 files = fs.lsl(root);
 
 for (file in files) {
-    if (!files[file].isDirectory() && fs.readfile(root + '/' + file) == '') {
+    if (!files[file].isDirectory() && fs.readfile(root + '/' + file) === '') {
         uncovered.push(file.replace('.js', ''));
     }
 

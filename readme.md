@@ -82,7 +82,9 @@ Do you like that, want to help? Welcome!
  - **readfile/writefile**: whenever you need, read, write, all sync, autopaths
  - **open/read/write/close**: big files? well...
  - **exists**: checks if exists, return file system object stats if exists
- - **relpath/realpath**: paths transform, cross-platform, exists-free 
+ - **relpath/realpath**: paths transform, cross-platform, exists-free
+ - **basename/dirname**: aliases for native path.basename/path.dirname
+ - **glob**: alias for glob.sync
 
 ## Want More?
 

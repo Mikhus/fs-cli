@@ -1,6 +1,8 @@
 var assert = require('assert');
 var fs = require('../index');
-var tgz = require('tar.gz');
+var tar = require('tar-stream');
+var gunzip = require('gunzip-maybe');
+var nfs = require('fs');
 var p = require('path');
 
 describe('fs.tar()', function () {
@@ -12,7 +14,7 @@ describe('fs.tar()', function () {
         assert.equal(fs.error(), null);
     });
 
-    it('should create zip archive', function () {
+    it('should create gzipped tarball', function () {
         assert.equal(fs.tar(src, dst), true);
         assert.equal(!!fs.exists(dst), true);
     });
@@ -24,25 +26,29 @@ describe('fs.tar()', function () {
         assert.equal(stat.size > 0, true);
     });
     it('should contain certain file', function (done) {
+        var extract = tar.extract();
         var found = false;
-        var read = require('fs').createReadStream(dst);
-        var parse = tgz().createParseStream();
-        var thisFile = p.basename(__filename);
 
-        parse.on('entry', function(entry){
-            var entryFile = p.basename(entry.path);
-
-            if (entryFile == thisFile) {
+        extract.on('entry', function (header, stream, next) {
+            if (header.name == 'test/tar.js') {
                 found = true;
+                stream.end();
+                extract.end();
+                done();
             }
+
+            stream.on('end', next);
+            stream.resume();
         });
 
-        parse.on('close', function () {
+        extract.on('finish', function () {
             assert.equal(found, true);
             done();
         });
 
-        read.pipe(parse);
+        nfs.createReadStream('./tmp/test.tgz')
+            .pipe(gunzip())
+            .pipe(extract);
     });
 
     after(function() {

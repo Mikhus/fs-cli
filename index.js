@@ -14,7 +14,8 @@
 
 var p = require('path');
 var fs = require('fs');
-var tgz = require('tar.gz');
+var tarball = require('tar-fs');
+var gunzip = require('gunzip-maybe');
 var Zip = require('adm-zip');
 var glob = require('glob');
 var deasync = require('deasync');
@@ -55,15 +56,18 @@ function relpath (path, base) {
  * Returns processing flags
  * @param {Stream} read
  * @param {Stream} write
+ * @param {string} [closeEvent] - close event name to watch, default 'close'
  * @returns {{ err: {Error}, done: {boolean} }}
  * @access private
  * @static
  */
-function pipeSync (read, write) {
+function pipeSync (read, write, closeEvent) {
     'use strict';
 
     var err = null;
     var done = false;
+
+    closeEvent = closeEvent || 'close';
 
     read.on('error', function (e) {
         err = e;
@@ -84,7 +88,7 @@ function pipeSync (read, write) {
         }
     });
 
-    write.on('close', function (e) {
+    write.on(closeEvent, function (e) {
         err = e;
         done = true;
     });
@@ -786,9 +790,10 @@ function tar (src, dst) {
     dst = realpath(dst || p.basename(src) + '.tgz');
 
     var dir = p.dirname(dst);
-    var stat = exists(src);
+    var existingSrc = exists(src);
+    var root = '';
 
-    if (!stat) {
+    if (!existingSrc) {
         lastError = new Error('Tar error: source path "' + src +
             '" does not exists!');
         return false;
@@ -798,8 +803,17 @@ function tar (src, dst) {
         return false;
     }
 
+    if (existingSrc.isDirectory()) {
+        root = p.basename(src) + '/';
+    }
+
     return pipeSync(
-        tgz().createReadStream(src),
+        tarball.pack(src, {
+            map: function (header) {
+                header.name = root + header.name;
+                return header;
+            }
+        }).pipe(gunzip()),
         fs.createWriteStream(dst)
     );
 }
@@ -821,9 +835,9 @@ function untar (src, dst) {
     dst = realpath(dst || '.');
 
     var dir = p.dirname(dst);
-    var stat = exists(src);
+    var existingSrc = exists(src);
 
-    if (!stat) {
+    if (!existingSrc) {
         lastError = new Error('Untar error: source path "' + src +
             '" does not exists!');
         return false;
@@ -834,8 +848,9 @@ function untar (src, dst) {
     }
 
     return pipeSync(
-        fs.createReadStream(src),
-        tgz().createWriteStream(dst)
+        fs.createReadStream(src).pipe(gunzip()),
+        tarball.extract(dst),
+        'finish'
     );
 }
 
@@ -1248,6 +1263,8 @@ module.exports = {
     exists: exists,
     error: error,
     relpath: relpath,
+    basename: p.basename,
+    dirname: p.dirname,
     glob: glob.sync,
     DIRSEP: SEP,
     DIRSEP_REGEX: SEP_RX
