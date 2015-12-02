@@ -10,5 +10,5 @@ node_js:
   - "0.10"
   - "node"
   - "stable"
-after_install:
+before_scripts:
   - "npm install -g jsdoc jscs jshint"
