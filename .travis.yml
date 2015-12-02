@@ -11,4 +11,4 @@ node_js:
   - "node"
   - "stable"
 before_script:
-  - npm install -g jsdoc jscs jshint
+  - "npm install -g jsdoc jscs jshint"
