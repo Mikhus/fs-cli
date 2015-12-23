@@ -598,28 +598,8 @@ function rm (path) {
         return false;
     }
 
-    if (!Object.keys(entries).length && stat.isDirectory()) {
-        try {
-            fs.rmdirSync(path);
-        }
-
-        catch (err) {
-            lastError = err;
-            return false;
-        }
-
-        return true;
-    }
-
     for (entry in entries) {
-        try {
-            if (!rm(path + SEP + entry)) {
-                return false;
-            }
-        }
-
-        catch (err) {
-            lastError = err;
+        if (!rm(path + SEP + entry)) {
             return false;
         }
     }
@@ -686,7 +666,7 @@ function list (path, method, all) {
     var mstat = function (itemPath) {
         return method != 'none' && fs[method + 'Sync'] ?
             fs[method + 'Sync'](itemPath) :
-            {};
+        {};
     };
 
     try {
@@ -1002,7 +982,7 @@ function unzip (src, dst) {
 function realpath (path) {
     'use strict';
 
-    var fsPath, fsParts, parts, i, s, joint;
+    var fsPath, fspRx, fsParts, parts, i, index, lastIndex;
     var pathArg = path;
 
     path = p.normalize(path);
@@ -1012,24 +992,46 @@ function realpath (path) {
     }
 
     catch (err) {
-        fsPath = err.path;
-    }
+        fsPath = p.dirname(err.path);
 
-    fsParts = fsPath.split(SEP);
-    parts = path.split(SEP_RX).filter(function (part) {
-        return part && part !== '.' && part !== '..';
-    });
+        fspRx = fsPath.replace(/\//g, '\\/').replace(/\\/g, '\\\\');
+        fspRx = new RegExp('^' + fspRx + '(\\\\)?');
 
-    joint = fsParts[fsParts.length - 1];
+        path = path.replace(fspRx, '');
 
-    for (i = 0, s = parts.length; i < s; i++) {
-        if (parts[i] == joint) {
-            parts = parts.slice(i + 1);
-            break;
+        fsParts = fsPath.split(SEP_RX).reverse();
+        parts = path.split(SEP_RX).filter(function (part) {
+            return part !== '.' && part !== '..';
+        });
+
+        i = 0;
+        while (true) {
+            index = fsParts.indexOf(parts[i]);
+
+            if (index === -1) {
+                break;
+            }
+
+            else {
+                i++;
+            }
+
+            if (lastIndex === undefined) {
+                lastIndex = index;
+            }
+
+            else if (index - lastIndex > 1) {
+                break;
+            }
         }
+
+
+        path = parts.slice(i).join(SEP);
+
+        fsPath = [fsPath, path].join(SEP).replace(/(\\|\/)$/, '');
     }
 
-    return fsParts.concat(parts).join(SEP);
+    return fsPath;
 }
 
 /**
