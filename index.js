@@ -598,6 +598,19 @@ function rm (path) {
         return false;
     }
 
+    if (!Object.keys(entries).length && stat.isDirectory()) {
+        try {
+            fs.rmdirSync(path);
+        }
+
+        catch (err) {
+            lastError = err;
+            return false;
+        }
+
+        return true;
+    }
+
     for (entry in entries) {
         try {
             if (!rm(path + SEP + entry)) {
