@@ -594,7 +594,7 @@ function rm (path) {
 
     entries = list(path);
 
-    if (!entries) {
+    if (entries === null) {
         return false;
     }
 
