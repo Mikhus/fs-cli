@@ -1,11 +1,15 @@
 {
   "name": "fs-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Easy filesystem functions",
   "main": "index.js",
   "author": {
     "name": "mikhus",
     "email": "mikhus@gmail.com"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/Mikhus/fs-cli.git"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha ./test",
